@@ -1,10 +1,12 @@
 import './App.css';
-import { BrowserRouter, Routes, Route, useParams } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams, Link } from "react-router-dom";
 
 function App() {
   return (
     <BrowserRouter>
+    <NavBar />
       <Routes>
+        <Route path="/" element={<Home />}></Route>
         <Route path="/login" element={<Login />}></Route>
         <Route path="/signup" element={<Signup />}></Route>
         <Route path="/about" element={<About />}></Route>
@@ -15,6 +17,35 @@ function App() {
     </BrowserRouter>
   );
 }
+
+
+function NavBar() {
+  return (
+    <div style={{
+      display: 'flex',
+      flexDirection: 'row',
+      height: '80px',
+      margin: '16px',
+      backgroundColor: '#0004',
+      justifyContent: 'space-around',
+      alignItems: 'center'
+    }}> 
+
+    <Link to="/login">Login</Link>
+    <Link to="/signup">Signup</Link> 
+    <Link to="/about">About</Link> 
+    <Link to="/logout">Logout</Link> 
+    </div>
+  )
+};
+
+function Home({isLoggedIn}) {
+  return (
+    <div>
+      {isLoggedIn ? <About /> : <Login />}
+    </div>
+  )
+};
 
 function Login() {
   return (
