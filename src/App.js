@@ -1,16 +1,19 @@
 import './App.css';
-import { BrowserRouter, Routes, Route, useParams, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useParams, Link, useNavigate } from "react-router-dom";
+import { useState } from 'react';
 
 function App() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+
   return (
     <BrowserRouter>
     <NavBar />
       <Routes>
-        <Route path="/" element={<Home />}></Route>
-        <Route path="/login" element={<Login />}></Route>
-        <Route path="/signup" element={<Signup />}></Route>
+        <Route path="/" element={<Home isLoggedIn={isLoggedIn}/>}></Route>
+        <Route path="/login" element={<Login userLogsIn={setIsLoggedIn}/>}></Route>
+        <Route path="/signup" element={<Signup userLogsIn={setIsLoggedIn}/>}></Route>
         <Route path="/about" element={<About />}></Route>
-        <Route path="/logout" element={<Logout />}></Route>
+        <Route path="/logout" element={<Logout userLogsIn={setIsLoggedIn}/>}></Route>
         
         <Route path="/:pageName" element={<ErrorPage />}></Route>
       </Routes>
@@ -47,20 +50,28 @@ function Home({isLoggedIn}) {
   )
 };
 
-function Login() {
+function Login({ userLogsIn }) {
+  const navigate = useNavigate();
   return (
     <div>
       <h3>Login Page</h3>
-      <button>Login here</button>
+      <button onClick={() => {
+        userLogsIn(true)
+        navigate('/')
+      }}>
+        Login here
+      </button>
     </div>
   )
 };
 
-function Signup() {
+function Signup({ userLogsIn }) {
   return (
     <div>
       <h3>Signup Page</h3>
-      <button>Signup here</button>
+      <button onClick={() => {
+        userLogsIn(true)
+      }}>Signup here</button>
     </div>
   )
 };
@@ -74,11 +85,13 @@ function About() {
   )
 };
 
-function Logout() {
+function Logout({ userLogsIn }) {
   return (
     <div>
       <h3>Logout Page</h3>
-      <button>Logout here</button>
+      <button onClick={() => {
+        userLogsIn(false)
+      }}>Logout here</button>
     </div>
   )
 };
