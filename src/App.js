@@ -9,12 +9,20 @@ function App() {
     <BrowserRouter>
     <NavBar />
       <Routes>
-        <Route path="/" element={<Home isLoggedIn={isLoggedIn}/>}></Route>
+        {/* Routes before login */}
         <Route path="/login" element={<Login userLogsIn={setIsLoggedIn}/>}></Route>
         <Route path="/signup" element={<Signup userLogsIn={setIsLoggedIn}/>}></Route>
-        <Route path="/about" element={<About />}></Route>
-        <Route path="/logout" element={<Logout userLogsIn={setIsLoggedIn}/>}></Route>
         
+        {/* Routes after login */}
+        {isLoggedIn && (
+          <>
+            <Route path="/about" element={<About />}></Route>
+            <Route path="/logout" element={<Logout userLogsIn={setIsLoggedIn}/>}></Route>
+          </>
+        )}
+        
+        {/* Routes for everyone */}
+        <Route path="/" element={<Home isLoggedIn={isLoggedIn} userLogsIn={setIsLoggedIn}/>}></Route>
         <Route path="/:pageName" element={<ErrorPage />}></Route>
       </Routes>
     </BrowserRouter>
@@ -42,16 +50,17 @@ function NavBar() {
   )
 };
 
-function Home({isLoggedIn}) {
+function Home({isLoggedIn, userLogsIn}) {
   return (
     <div>
-      {isLoggedIn ? <About /> : <Login />}
+      {isLoggedIn ? <About /> : <Login userLogsIn={userLogsIn} />}
     </div>
   )
 };
 
 function Login({ userLogsIn }) {
   const navigate = useNavigate();
+
   return (
     <div>
       <h3>Login Page</h3>
@@ -66,11 +75,14 @@ function Login({ userLogsIn }) {
 };
 
 function Signup({ userLogsIn }) {
+  const navigate = useNavigate();
+
   return (
     <div>
       <h3>Signup Page</h3>
       <button onClick={() => {
         userLogsIn(true)
+        navigate('/')
       }}>Signup here</button>
     </div>
   )
@@ -86,10 +98,13 @@ function About() {
 };
 
 function Logout({ userLogsIn }) {
+  const navigate = useNavigate();
+
   return (
     <div>
       <h3>Logout Page</h3>
       <button onClick={() => {
+        navigate('/')
         userLogsIn(false)
       }}>Logout here</button>
     </div>
